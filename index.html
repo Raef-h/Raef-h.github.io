@@ -433,14 +433,13 @@
     padding: 26px 24px 24px;
     display: flex;
     flex-direction: column;
-    transition: border-color 0.2s ease, transform 0.2s ease;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
   }
 
   .project-card:hover {
-    border-color: var(--accent);
-    transform: translateY(-3px);
-  }
-
+  border-color: var(--accent);
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.22);
+}
   .project-num {
     font-family: var(--mono);
     font-size: 11.5px;
