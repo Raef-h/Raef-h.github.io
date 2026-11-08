@@ -1,5 +1,16 @@
+<!doctype html>
+<html lang="en">
 <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Raef Alharbi — Portfolio</title>
+<meta name="description" content="Raef Alharbi — Computer Science graduate (KAU) working in data analysis and machine learning. Power BI dashboards, Python, SQL, and ML projects.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Raef Alharbi — Portfolio">
+<meta property="og:description" content="Data analysis and machine learning projects: Power BI dashboards, Python, SQL, and ML.">
+<meta property="og:url" content="https://raef-h.github.io/">
+<meta property="og:image" content="https://raef-h.github.io/assets/img-01.jpg">
+<meta name="twitter:card" content="summary">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230b0d10'/%3E%3Ctext x='16' y='22' font-family='monospace' font-size='16' font-weight='700' text-anchor='middle' fill='%23d6a24a'%3ERA%3C/text%3E%3C/svg%3E">
 <script>
   /* Apply saved theme before first paint to avoid a flash */
   (function () {
@@ -158,8 +169,46 @@
     color: var(--accent);
   }
 
-  @media (max-width: 560px) {
-    .site-nav-links { gap: 16px; }
+  .nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+  }
+
+  .theme-toggle.menu-toggle {
+    display: none;
+  }
+
+  /* Phones: section links collapse into a dropdown menu */
+  @media (max-width: 700px) {
+    .site-nav-inner { position: relative; padding: 12px 16px; }
+
+    .theme-toggle.menu-toggle { display: inline-flex; }
+
+    .site-nav-links {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      flex-direction: column;
+      gap: 0;
+      padding: 6px 16px 12px;
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.18);
+    }
+
+    .site-nav.open .site-nav-links { display: flex; }
+
+    .site-nav-links a {
+      font-size: 15px;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .site-nav-links a:last-child { border-bottom: none; }
   }
 
   .theme-toggle {
@@ -181,7 +230,8 @@
   }
 
   .theme-toggle:hover,
-  .theme-toggle:focus-visible {
+  .theme-toggle:focus-visible,
+  .site-nav.open .menu-toggle {
     color: var(--accent);
     border-color: var(--accent);
     background: var(--accent-soft);
@@ -212,8 +262,8 @@
   }
 
   .hero-photo {
-    width: 152px;
-    height: 152px;
+    width: 240px;
+    height: 240px;
     border-radius: 50%;
     object-fit: cover;
     object-position: top;
@@ -618,7 +668,24 @@
   }
 
   .lightbox-toggle:checked + .lightbox {
-    display: block;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .lightbox::after {
+    content: "✕";
+    position: absolute;
+    top: 14px;
+    right: 18px;
+    color: #fff;
+    font-size: 22px;
+    line-height: 1;
+    opacity: 0.8;
+  }
+
+  @media (max-width: 700px) {
+    .lightbox { padding: 16px; }
   }
 
   /* ---------- Skills ---------- */
@@ -822,9 +889,32 @@
 
   /* ---------- Responsive ---------- */
 
+  /* Laptop / desktop: wider centered page, projects in two columns */
+  @media (min-width: 1100px) {
+    .wrap, .site-nav-inner { max-width: 1200px; padding-left: 40px; padding-right: 40px; }
+    .hero .role { max-width: 60ch; }
+    .summary { max-width: 80ch; }
+    footer p { max-width: 60ch; }
+    .skill-groups { grid-template-columns: repeat(3, 1fr); }
+
+    .project-grid { grid-template-columns: repeat(2, 1fr); }
+
+    /* A card left alone in its row takes the full row */
+    .project-card.wide { grid-column: 1 / -1; }
+    .project-card.wide ul { max-width: 90ch; }
+  }
+
+  /* Tablet: bigger screenshot thumbnails */
+  @media (min-width: 701px) and (max-width: 1099px) {
+    .shot-gallery { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
+    .shot-thumb img { height: 96px; }
+  }
+
   @media (max-width: 700px) {
+    .wrap { padding: 0 16px; }
+    .project-card { padding: 22px 18px 20px; }
     .hero-top { flex-direction: column-reverse; gap: 20px; }
-    .hero-photo { width: 96px; height: 96px; }
+    .hero-photo { width: 150px; height: 150px; }
     .role-card { grid-template-columns: 1fr; gap: 10px; }
     .project-grid { grid-template-columns: 1fr; }
     .skill-groups { grid-template-columns: 1fr; }
@@ -846,7 +936,7 @@
 <nav class="site-nav">
   <div class="site-nav-inner">
     <a class="site-nav-brand" href="#top">RAEF ALHARBI</a>
-    <div class="site-nav-links">
+    <div class="site-nav-links" id="site-nav-links">
       <a href="#experience">Experience</a>
       <a href="#projects">Projects</a>
       <a href="#skills">Skills</a>
@@ -854,10 +944,15 @@
       <a href="#certifications">Certifications</a>
       <a href="#contact">Contact</a>
     </div>
-    <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Toggle color theme">
-      <span class="icon-sun" aria-hidden="true">☀</span>
-      <span class="icon-moon" aria-hidden="true">☾</span>
-    </button>
+    <div class="nav-actions">
+      <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Toggle color theme">
+        <span class="icon-sun" aria-hidden="true">☀</span>
+        <span class="icon-moon" aria-hidden="true">☾</span>
+      </button>
+      <button id="menu-toggle" class="theme-toggle menu-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="site-nav-links">
+        <span aria-hidden="true">☰</span>
+      </button>
+    </div>
   </div>
 </nav>
 
@@ -878,7 +973,8 @@
 
     <div class="link-row">
       <a href="mailto:Raef.alharbi.1@gmail.com">Email</a>
-      <a href="tel:+966569038163">+966 569 038 163</a>
+      <a href="tel:+966569038163">Phone</a>
+      <a href="https://wa.me/966569038163" target="_blank" rel="noopener">WhatsApp</a>
       <a href="https://www.linkedin.com/in/raef-alharbi" target="_blank" rel="noopener">LinkedIn</a>
       <a href="https://github.com/Raef-h" target="_blank" rel="noopener">GitHub</a>
     </div>
@@ -932,19 +1028,19 @@
           <li>Built a high-performance Streamlit + Plotly interface with cross-filtering and multi-dimensional analysis, mirroring enterprise BI standards.</li>
         </ul>
         <div class="shot-gallery">
-          <label class="shot-thumb" for="shot-9"><img src="assets/img-02.jpg" alt="UAE Used Cars Market Intelligence Dashboard screenshot"></label>
-          <label class="shot-thumb" for="shot-10"><img src="assets/img-03.jpg" alt="UAE Used Cars Market Intelligence Dashboard screenshot"></label>
-          <label class="shot-thumb" for="shot-11"><img src="assets/img-04.jpg" alt="UAE Used Cars Market Intelligence Dashboard screenshot"></label>
-          <label class="shot-thumb" for="shot-12"><img src="assets/img-05.jpg" alt="UAE Used Cars Market Intelligence Dashboard screenshot"></label>
+          <label class="shot-thumb" for="shot-9"><img loading="lazy" decoding="async" src="assets/img-02.jpg" alt="UAE Used Cars Market Intelligence Dashboard screenshot"></label>
+          <label class="shot-thumb" for="shot-10"><img loading="lazy" decoding="async" src="assets/img-03.jpg" alt="UAE Used Cars Market Intelligence Dashboard screenshot"></label>
+          <label class="shot-thumb" for="shot-11"><img loading="lazy" decoding="async" src="assets/img-04.jpg" alt="UAE Used Cars Market Intelligence Dashboard screenshot"></label>
+          <label class="shot-thumb" for="shot-12"><img loading="lazy" decoding="async" src="assets/img-05.jpg" alt="UAE Used Cars Market Intelligence Dashboard screenshot"></label>
         </div>
         <input type="checkbox" id="shot-9" class="lightbox-toggle">
-        <label class="lightbox" for="shot-9"><img src="assets/img-02.jpg" alt="UAE Used Cars Market Intelligence Dashboard screenshot, enlarged"></label>
+        <label class="lightbox" for="shot-9"><img loading="lazy" decoding="async" src="assets/img-02.jpg" alt="UAE Used Cars Market Intelligence Dashboard screenshot, enlarged"></label>
         <input type="checkbox" id="shot-10" class="lightbox-toggle">
-        <label class="lightbox" for="shot-10"><img src="assets/img-03.jpg" alt="UAE Used Cars Market Intelligence Dashboard screenshot, enlarged"></label>
+        <label class="lightbox" for="shot-10"><img loading="lazy" decoding="async" src="assets/img-03.jpg" alt="UAE Used Cars Market Intelligence Dashboard screenshot, enlarged"></label>
         <input type="checkbox" id="shot-11" class="lightbox-toggle">
-        <label class="lightbox" for="shot-11"><img src="assets/img-04.jpg" alt="UAE Used Cars Market Intelligence Dashboard screenshot, enlarged"></label>
+        <label class="lightbox" for="shot-11"><img loading="lazy" decoding="async" src="assets/img-04.jpg" alt="UAE Used Cars Market Intelligence Dashboard screenshot, enlarged"></label>
         <input type="checkbox" id="shot-12" class="lightbox-toggle">
-        <label class="lightbox" for="shot-12"><img src="assets/img-05.jpg" alt="UAE Used Cars Market Intelligence Dashboard screenshot, enlarged"></label>
+        <label class="lightbox" for="shot-12"><img loading="lazy" decoding="async" src="assets/img-05.jpg" alt="UAE Used Cars Market Intelligence Dashboard screenshot, enlarged"></label>
         <div class="tag-row">
           <span class="tag">Python</span>
           <span class="tag">Streamlit</span>
@@ -965,16 +1061,16 @@
           <li>Implemented interactive multi-dimensional filters (Manufacturer, Model, Geography, Fuel Type) for deep-dive exploratory analysis.</li>
         </ul>
         <div class="shot-gallery">
-          <label class="shot-thumb" for="shot-6"><img src="assets/img-06.jpg" alt="UAE Used Car Market Analytical Dashboard — overview page with fuel type, color, and manufacturer breakdowns"></label>
-          <label class="shot-thumb" for="shot-7"><img src="assets/img-07.jpg" alt="UAE Used Car Market Analytical Dashboard — drill-down page for Mercedes-Benz pricing and models"></label>
-          <label class="shot-thumb" for="shot-8"><img src="assets/img-08.jpg" alt="UAE Used Car Market Analytical Dashboard — market map and yearly listing trends"></label>
+          <label class="shot-thumb" for="shot-6"><img loading="lazy" decoding="async" src="assets/img-06.jpg" alt="UAE Used Car Market Analytical Dashboard — overview page with fuel type, color, and manufacturer breakdowns"></label>
+          <label class="shot-thumb" for="shot-7"><img loading="lazy" decoding="async" src="assets/img-07.jpg" alt="UAE Used Car Market Analytical Dashboard — drill-down page for Mercedes-Benz pricing and models"></label>
+          <label class="shot-thumb" for="shot-8"><img loading="lazy" decoding="async" src="assets/img-08.jpg" alt="UAE Used Car Market Analytical Dashboard — market map and yearly listing trends"></label>
         </div>
         <input type="checkbox" id="shot-6" class="lightbox-toggle">
-        <label class="lightbox" for="shot-6"><img src="assets/img-06.jpg" alt="UAE Used Car Market Analytical Dashboard — overview page, enlarged"></label>
+        <label class="lightbox" for="shot-6"><img loading="lazy" decoding="async" src="assets/img-06.jpg" alt="UAE Used Car Market Analytical Dashboard — overview page, enlarged"></label>
         <input type="checkbox" id="shot-7" class="lightbox-toggle">
-        <label class="lightbox" for="shot-7"><img src="assets/img-07.jpg" alt="UAE Used Car Market Analytical Dashboard — Mercedes-Benz drill-down, enlarged"></label>
+        <label class="lightbox" for="shot-7"><img loading="lazy" decoding="async" src="assets/img-07.jpg" alt="UAE Used Car Market Analytical Dashboard — Mercedes-Benz drill-down, enlarged"></label>
         <input type="checkbox" id="shot-8" class="lightbox-toggle">
-        <label class="lightbox" for="shot-8"><img src="assets/img-08.jpg" alt="UAE Used Car Market Analytical Dashboard — map and yearly trends, enlarged"></label>
+        <label class="lightbox" for="shot-8"><img loading="lazy" decoding="async" src="assets/img-08.jpg" alt="UAE Used Car Market Analytical Dashboard — map and yearly trends, enlarged"></label>
         <div class="tag-row">
           <span class="tag">Power BI</span>
           <span class="tag">DAX</span>
@@ -991,13 +1087,13 @@
           <li>Built twice as a comparison — once in Excel, once in Power BI, on the same dataset.</li>
         </ul>
         <div class="shot-gallery">
-          <label class="shot-thumb" for="shot-13"><img src="assets/img-09.jpg" alt="Sales and Revenue Analytics 2025 — Excel version"></label>
-          <label class="shot-thumb" for="shot-14"><img src="assets/img-10.jpg" alt="Sales and Revenue Analytics 2025 — Power BI version"></label>
+          <label class="shot-thumb" for="shot-13"><img loading="lazy" decoding="async" src="assets/img-09.jpg" alt="Sales and Revenue Analytics 2025 — Excel version"></label>
+          <label class="shot-thumb" for="shot-14"><img loading="lazy" decoding="async" src="assets/img-10.jpg" alt="Sales and Revenue Analytics 2025 — Power BI version"></label>
         </div>
         <input type="checkbox" id="shot-13" class="lightbox-toggle">
-        <label class="lightbox" for="shot-13"><img src="assets/img-09.jpg" alt="Sales and Revenue Analytics 2025 — Excel version, enlarged"></label>
+        <label class="lightbox" for="shot-13"><img loading="lazy" decoding="async" src="assets/img-09.jpg" alt="Sales and Revenue Analytics 2025 — Excel version, enlarged"></label>
         <input type="checkbox" id="shot-14" class="lightbox-toggle">
-        <label class="lightbox" for="shot-14"><img src="assets/img-10.jpg" alt="Sales and Revenue Analytics 2025 — Power BI version, enlarged"></label>
+        <label class="lightbox" for="shot-14"><img loading="lazy" decoding="async" src="assets/img-10.jpg" alt="Sales and Revenue Analytics 2025 — Power BI version, enlarged"></label>
         <div class="tag-row">
           <span class="tag">Excel</span>
           <span class="tag">Power BI</span>
@@ -1014,13 +1110,13 @@
           <li>Built twice as a comparison — once in Excel, once in Power BI, on the same dataset.</li>
         </ul>
         <div class="shot-gallery">
-          <label class="shot-thumb" for="shot-15"><img src="assets/img-11.jpg" alt="HR Analytics dashboard — Excel version"></label>
-          <label class="shot-thumb" for="shot-16"><img src="assets/img-12.jpg" alt="HR Analytics dashboard — Power BI version"></label>
+          <label class="shot-thumb" for="shot-15"><img loading="lazy" decoding="async" src="assets/img-11.jpg" alt="HR Analytics dashboard — Excel version"></label>
+          <label class="shot-thumb" for="shot-16"><img loading="lazy" decoding="async" src="assets/img-12.jpg" alt="HR Analytics dashboard — Power BI version"></label>
         </div>
         <input type="checkbox" id="shot-15" class="lightbox-toggle">
-        <label class="lightbox" for="shot-15"><img src="assets/img-11.jpg" alt="HR Analytics dashboard — Excel version, enlarged"></label>
+        <label class="lightbox" for="shot-15"><img loading="lazy" decoding="async" src="assets/img-11.jpg" alt="HR Analytics dashboard — Excel version, enlarged"></label>
         <input type="checkbox" id="shot-16" class="lightbox-toggle">
-        <label class="lightbox" for="shot-16"><img src="assets/img-12.jpg" alt="HR Analytics dashboard — Power BI version, enlarged"></label>
+        <label class="lightbox" for="shot-16"><img loading="lazy" decoding="async" src="assets/img-12.jpg" alt="HR Analytics dashboard — Power BI version, enlarged"></label>
         <div class="tag-row">
           <span class="tag">Excel</span>
           <span class="tag">Power BI</span>
@@ -1037,10 +1133,10 @@
           <li>Surfaces top brand, top vehicle type, and top price segment alongside listing volume by region.</li>
         </ul>
         <div class="shot-gallery">
-          <label class="shot-thumb" for="shot-17"><img src="assets/img-13.jpg" alt="Saudi Automotive Market Overview dashboard"></label>
+          <label class="shot-thumb" for="shot-17"><img loading="lazy" decoding="async" src="assets/img-13.jpg" alt="Saudi Automotive Market Overview dashboard"></label>
         </div>
         <input type="checkbox" id="shot-17" class="lightbox-toggle">
-        <label class="lightbox" for="shot-17"><img src="assets/img-13.jpg" alt="Saudi Automotive Market Overview dashboard, enlarged"></label>
+        <label class="lightbox" for="shot-17"><img loading="lazy" decoding="async" src="assets/img-13.jpg" alt="Saudi Automotive Market Overview dashboard, enlarged"></label>
         <div class="tag-row">
           <span class="tag">Power BI</span>
           <span class="tag">DAX</span>
@@ -1057,10 +1153,10 @@
           <li>Tracked career-switch rates into data roles and yearly salary distribution.</li>
         </ul>
         <div class="shot-gallery">
-          <label class="shot-thumb" for="shot-18"><img src="assets/img-14.jpg" alt="Data Professional Survey dashboard"></label>
+          <label class="shot-thumb" for="shot-18"><img loading="lazy" decoding="async" src="assets/img-14.jpg" alt="Data Professional Survey dashboard"></label>
         </div>
         <input type="checkbox" id="shot-18" class="lightbox-toggle">
-        <label class="lightbox" for="shot-18"><img src="assets/img-14.jpg" alt="Data Professional Survey dashboard, enlarged"></label>
+        <label class="lightbox" for="shot-18"><img loading="lazy" decoding="async" src="assets/img-14.jpg" alt="Data Professional Survey dashboard, enlarged"></label>
         <div class="tag-row">
           <span class="tag">Power BI</span>
           <span class="tag">DAX</span>
@@ -1077,13 +1173,13 @@
           <li>Decomposition tree drilling from demographics down to blood pressure, cholesterol, and individual patient records.</li>
         </ul>
         <div class="shot-gallery">
-          <label class="shot-thumb" for="shot-19"><img src="assets/img-15.jpg" alt="Heart Attack Risk dashboard — overview"></label>
-          <label class="shot-thumb" for="shot-20"><img src="assets/img-16.jpg" alt="Heart Attack Risk dashboard — decomposition tree"></label>
+          <label class="shot-thumb" for="shot-19"><img loading="lazy" decoding="async" src="assets/img-15.jpg" alt="Heart Attack Risk dashboard — overview"></label>
+          <label class="shot-thumb" for="shot-20"><img loading="lazy" decoding="async" src="assets/img-16.jpg" alt="Heart Attack Risk dashboard — decomposition tree"></label>
         </div>
         <input type="checkbox" id="shot-19" class="lightbox-toggle">
-        <label class="lightbox" for="shot-19"><img src="assets/img-15.jpg" alt="Heart Attack Risk dashboard — overview, enlarged"></label>
+        <label class="lightbox" for="shot-19"><img loading="lazy" decoding="async" src="assets/img-15.jpg" alt="Heart Attack Risk dashboard — overview, enlarged"></label>
         <input type="checkbox" id="shot-20" class="lightbox-toggle">
-        <label class="lightbox" for="shot-20"><img src="assets/img-16.jpg" alt="Heart Attack Risk dashboard — decomposition tree, enlarged"></label>
+        <label class="lightbox" for="shot-20"><img loading="lazy" decoding="async" src="assets/img-16.jpg" alt="Heart Attack Risk dashboard — decomposition tree, enlarged"></label>
         <div class="tag-row">
           <span class="tag">Power BI</span>
           <span class="tag">DAX</span>
@@ -1100,16 +1196,16 @@
           <li>Decomposition tree tracing pathways from gender through college, department, specialization, and degree.</li>
         </ul>
         <div class="shot-gallery">
-          <label class="shot-thumb" for="shot-21"><img src="assets/img-17.jpg" alt="KAU Graduates Statistics dashboard — 2023 cohort overview"></label>
-          <label class="shot-thumb" for="shot-22"><img src="assets/img-18.jpg" alt="KAU Graduates Statistics dashboard — 2020-2024 overview"></label>
-          <label class="shot-thumb" for="shot-23"><img src="assets/img-19.jpg" alt="KAU Graduates Statistics dashboard — decomposition tree"></label>
+          <label class="shot-thumb" for="shot-21"><img loading="lazy" decoding="async" src="assets/img-17.jpg" alt="KAU Graduates Statistics dashboard — 2023 cohort overview"></label>
+          <label class="shot-thumb" for="shot-22"><img loading="lazy" decoding="async" src="assets/img-18.jpg" alt="KAU Graduates Statistics dashboard — 2020-2024 overview"></label>
+          <label class="shot-thumb" for="shot-23"><img loading="lazy" decoding="async" src="assets/img-19.jpg" alt="KAU Graduates Statistics dashboard — decomposition tree"></label>
         </div>
         <input type="checkbox" id="shot-21" class="lightbox-toggle">
-        <label class="lightbox" for="shot-21"><img src="assets/img-17.jpg" alt="KAU Graduates Statistics dashboard — 2023 cohort overview, enlarged"></label>
+        <label class="lightbox" for="shot-21"><img loading="lazy" decoding="async" src="assets/img-17.jpg" alt="KAU Graduates Statistics dashboard — 2023 cohort overview, enlarged"></label>
         <input type="checkbox" id="shot-22" class="lightbox-toggle">
-        <label class="lightbox" for="shot-22"><img src="assets/img-18.jpg" alt="KAU Graduates Statistics dashboard — 2020-2024 overview, enlarged"></label>
+        <label class="lightbox" for="shot-22"><img loading="lazy" decoding="async" src="assets/img-18.jpg" alt="KAU Graduates Statistics dashboard — 2020-2024 overview, enlarged"></label>
         <input type="checkbox" id="shot-23" class="lightbox-toggle">
-        <label class="lightbox" for="shot-23"><img src="assets/img-19.jpg" alt="KAU Graduates Statistics dashboard — decomposition tree, enlarged"></label>
+        <label class="lightbox" for="shot-23"><img loading="lazy" decoding="async" src="assets/img-19.jpg" alt="KAU Graduates Statistics dashboard — decomposition tree, enlarged"></label>
         <div class="tag-row">
           <span class="tag">Power BI</span>
           <span class="tag">DAX</span>
@@ -1126,13 +1222,13 @@
           <li>Decomposition tree drilling from yearly order counts down to city, product line, and postal code.</li>
         </ul>
         <div class="shot-gallery">
-          <label class="shot-thumb" for="shot-24"><img src="assets/img-20.jpg" alt="Auto Sales dashboard — overview"></label>
-          <label class="shot-thumb" for="shot-25"><img src="assets/img-21.jpg" alt="Auto Sales dashboard — decomposition tree"></label>
+          <label class="shot-thumb" for="shot-24"><img loading="lazy" decoding="async" src="assets/img-20.jpg" alt="Auto Sales dashboard — overview"></label>
+          <label class="shot-thumb" for="shot-25"><img loading="lazy" decoding="async" src="assets/img-21.jpg" alt="Auto Sales dashboard — decomposition tree"></label>
         </div>
         <input type="checkbox" id="shot-24" class="lightbox-toggle">
-        <label class="lightbox" for="shot-24"><img src="assets/img-20.jpg" alt="Auto Sales dashboard — overview, enlarged"></label>
+        <label class="lightbox" for="shot-24"><img loading="lazy" decoding="async" src="assets/img-20.jpg" alt="Auto Sales dashboard — overview, enlarged"></label>
         <input type="checkbox" id="shot-25" class="lightbox-toggle">
-        <label class="lightbox" for="shot-25"><img src="assets/img-21.jpg" alt="Auto Sales dashboard — decomposition tree, enlarged"></label>
+        <label class="lightbox" for="shot-25"><img loading="lazy" decoding="async" src="assets/img-21.jpg" alt="Auto Sales dashboard — decomposition tree, enlarged"></label>
         <div class="tag-row">
           <span class="tag">Power BI</span>
           <span class="tag">DAX</span>
@@ -1151,10 +1247,10 @@
           <li>Presented and demoed as a fully functional app at the "Tech Hub" exhibition.</li>
         </ul>
         <div class="shot-gallery">
-          <label class="shot-thumb" for="shot-4"><img src="assets/img-22.jpg" alt="Dermavision app screenshot"></label>
+          <label class="shot-thumb" for="shot-4"><img loading="lazy" decoding="async" src="assets/img-22.jpg" alt="Dermavision app screenshot"></label>
         </div>
         <input type="checkbox" id="shot-4" class="lightbox-toggle">
-        <label class="lightbox" for="shot-4"><img src="assets/img-22.jpg" alt="Dermavision app screenshot, enlarged"></label>
+        <label class="lightbox" for="shot-4"><img loading="lazy" decoding="async" src="assets/img-22.jpg" alt="Dermavision app screenshot, enlarged"></label>
         <div class="tag-row">
           <span class="tag">Flutter</span>
           <span class="tag">TensorFlow</span>
@@ -1174,10 +1270,10 @@
           <li>Dynamic front-end: real-time product tables, interactive image galleries, client-side form validation.</li>
         </ul>
         <div class="shot-gallery">
-          <label class="shot-thumb" for="shot-5"><img src="assets/img-23.jpg" alt="Tech Store e-commerce platform screenshot"></label>
+          <label class="shot-thumb" for="shot-5"><img loading="lazy" decoding="async" src="assets/img-23.jpg" alt="Tech Store e-commerce platform screenshot"></label>
         </div>
         <input type="checkbox" id="shot-5" class="lightbox-toggle">
-        <label class="lightbox" for="shot-5"><img src="assets/img-23.jpg" alt="Tech Store e-commerce platform screenshot, enlarged"></label>
+        <label class="lightbox" for="shot-5"><img loading="lazy" decoding="async" src="assets/img-23.jpg" alt="Tech Store e-commerce platform screenshot, enlarged"></label>
         <div class="tag-row">
           <span class="tag">HTML5</span>
           <span class="tag">CSS3</span>
@@ -1354,7 +1450,8 @@
     <p>Open to roles in data analysis, machine learning, and database engineering. Reach out — I reply fast.</p>
     <div class="contact-links">
       <a href="mailto:Raef.alharbi.1@gmail.com">✉ Raef.alharbi.1@gmail.com</a>
-      <a href="tel:+966569038163">☎ +966 569 038 163</a>
+      <a href="tel:+966569038163">☎ Phone</a>
+      <a href="https://wa.me/966569038163" target="_blank" rel="noopener">✆ WhatsApp</a>
       <a href="https://www.linkedin.com/in/raef-alharbi" target="_blank" rel="noopener">in LinkedIn</a>
       <a href="https://github.com/Raef-h" target="_blank" rel="noopener">⌥ GitHub</a>
     </div>
@@ -1398,5 +1495,70 @@
     });
 
     syncLabel();
+  })();
+
+  /* Projects: mark the last card of a group with an odd count so it spans the row */
+  (function () {
+    var grid = document.querySelector('.project-grid');
+    if (!grid) return;
+    var group = [];
+
+    function closeGroup() {
+      if (group.length % 2 === 1) group[group.length - 1].classList.add('wide');
+      group = [];
+    }
+
+    Array.prototype.forEach.call(grid.children, function (el) {
+      if (el.classList.contains('group-header')) closeGroup();
+      else if (el.classList.contains('project-card')) group.push(el);
+    });
+    closeGroup();
+  })();
+
+  /* Mobile menu: open/close the section links dropdown */
+  (function () {
+    var nav = document.querySelector('.site-nav');
+    var btn = document.getElementById('menu-toggle');
+    if (!nav || !btn) return;
+
+    function setOpen(open) {
+      nav.classList.toggle('open', open);
+      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      btn.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+    }
+
+    btn.addEventListener('click', function () {
+      setOpen(!nav.classList.contains('open'));
+    });
+
+    nav.querySelectorAll('.site-nav-links a').forEach(function (link) {
+      link.addEventListener('click', function () { setOpen(false); });
+    });
+
+    document.addEventListener('click', function (e) {
+      if (!nav.contains(e.target)) setOpen(false);
+    });
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') setOpen(false);
+    });
+  })();
+
+  /* Screenshot lightbox: keyboard-open thumbnails, Escape to close */
+  (function () {
+    document.querySelectorAll('.shot-thumb').forEach(function (thumb) {
+      thumb.setAttribute('tabindex', '0');
+      thumb.setAttribute('role', 'button');
+      thumb.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); thumb.click(); }
+      });
+    });
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key !== 'Escape') return;
+      document.querySelectorAll('.lightbox-toggle:checked').forEach(function (box) {
+        box.checked = false;
+      });
+    });
   })();
 </script>
